@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 export type UserRole = 'OWNER' | 'CUSTOMER' | 'ADMIN' | 'GUEST';
 
 export interface Product {

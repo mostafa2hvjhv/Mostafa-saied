@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { User, Store, Globe, CreditCard, ChevronLeft, ChevronRight, Check, Image as ImageIcon } from 'lucide-react';
 import { PLANS } from '../constants';
 
-const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
+const StoreRegistration: React.FC<{ onComplete: (data: any) => void }> = ({ onComplete }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     ownerName: '',
@@ -11,9 +11,10 @@ const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete })
     email: '',
     password: '',
     storeName: '',
-    storeType: '',
+    storeType: 'كتب إلكترونية',
     subdomain: '',
-    planId: 'free'
+    planId: 'free',
+    description: ''
   });
 
   const nextStep = () => setStep(s => Math.min(s + 1, 4));
@@ -25,6 +26,10 @@ const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete })
     { id: 3, label: 'النطاق', icon: <Globe size={20} /> },
     { id: 4, label: 'الخطة', icon: <CreditCard size={20} /> },
   ];
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 flex justify-center">
@@ -58,19 +63,40 @@ const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete })
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-700">الاسم الكامل</label>
-                    <input className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="أحمد محمد" />
+                    <input 
+                      className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" 
+                      placeholder="أحمد محمد" 
+                      value={formData.ownerName}
+                      onChange={(e) => handleInputChange('ownerName', e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-700">رقم الهاتف</label>
-                    <input className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="5xxxxxxxx" />
+                    <input 
+                      className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" 
+                      placeholder="5xxxxxxxx" 
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-700">البريد الإلكتروني</label>
-                    <input className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="owner@test.com" />
+                    <input 
+                      className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" 
+                      placeholder="owner@test.com" 
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-700">كلمة المرور</label>
-                    <input type="password" className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="••••••••" />
+                    <input 
+                      type="password" 
+                      className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" 
+                      placeholder="••••••••" 
+                      value={formData.password}
+                      onChange={(e) => handleInputChange('password', e.target.value)}
+                    />
                   </div>
                 </div>
               </div>
@@ -92,11 +118,20 @@ const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete })
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-gray-700">اسم المتجر</label>
-                      <input className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="متجري الرقمي" />
+                      <input 
+                        className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" 
+                        placeholder="متجري الرقمي" 
+                        value={formData.storeName}
+                        onChange={(e) => handleInputChange('storeName', e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-gray-700">نوع المتجر</label>
-                      <select className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                      <select 
+                        className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white font-bold"
+                        value={formData.storeType}
+                        onChange={(e) => handleInputChange('storeType', e.target.value)}
+                      >
                         <option>كتب إلكترونية</option>
                         <option>دورات</option>
                         <option>برمجيات</option>
@@ -105,7 +140,12 @@ const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete })
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-700">وصف المتجر</label>
-                    <textarea className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none h-32" placeholder="اكتب وصفاً جذاباً لمتجرك..."></textarea>
+                    <textarea 
+                      className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none h-32" 
+                      placeholder="اكتب وصفاً جذاباً لمتجرك..."
+                      value={formData.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                    ></textarea>
                   </div>
                 </div>
               </div>
@@ -119,13 +159,21 @@ const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete })
                 </div>
                 <div className="max-w-md mx-auto space-y-4">
                   <div className="flex items-center gap-2 p-1 pr-4 bg-gray-100 border rounded-2xl focus-within:ring-2 focus-within:ring-indigo-500 transition-all">
-                    <input className="flex-1 bg-transparent py-3 outline-none font-bold text-left" placeholder="my-store" dir="ltr" />
+                    <input 
+                      className="flex-1 bg-transparent py-3 outline-none font-bold text-left" 
+                      placeholder="my-store" 
+                      dir="ltr" 
+                      value={formData.subdomain}
+                      onChange={(e) => handleInputChange('subdomain', e.target.value)}
+                    />
                     <span className="text-gray-500 font-bold" dir="ltr">.mystore.com</span>
                   </div>
-                  <div className="flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-xl">
-                    <Check size={16} />
-                    <span className="text-sm font-bold">هذا النطاق متوفر حالياً!</span>
-                  </div>
+                  {formData.subdomain && (
+                    <div className="flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-xl animate-in fade-in">
+                      <Check size={16} />
+                      <span className="text-sm font-bold">هذا النطاق متوفر حالياً!</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -172,7 +220,7 @@ const StoreRegistration: React.FC<{ onComplete: () => void }> = ({ onComplete })
               <span>السابق</span>
             </button>
             <button 
-              onClick={step === 4 ? onComplete : nextStep}
+              onClick={step === 4 ? () => onComplete(formData) : nextStep}
               className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all flex items-center gap-2"
             >
               <span>{step === 4 ? 'تأكيد وإنشاء المتجر' : 'التالي'}</span>
